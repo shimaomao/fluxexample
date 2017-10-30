@@ -1,6 +1,8 @@
-# Flux Spring Boot Example #
+# WebFlux Spring Boot Example #
 
-With the new Spring 5 and Spring Boot 2, there is now a new feature calling FluxWeb. It allows non blocking requests between services on server or frontend side.
+With the new Spring 5 and Spring Boot 2, there is now a new feature calling 'Reactive Web on Stack'. It allows non blocking requests between services on server or frontend side.
+
+https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html
 
 This is a Example how I anderstand it and have implemented in a solution.
 
