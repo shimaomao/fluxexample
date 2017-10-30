@@ -4,7 +4,7 @@ With the new Spring 5 and Spring Boot 2, there is now a new feature calling 'Rea
 
 https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html
 
-This is a Example how I anderstand it and have implemented in a solution.
+This is a Example how I understand it and have implemented in a solution.
 
 ## Common ##
 
