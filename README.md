@@ -13,7 +13,9 @@ This Project uses Swagger 2 UI to allow some calls to test the block and non blo
 ## Provider ##
 
 This is the data provider and is connecting to a H2 database. It also has a wait implemented to simulate a huge service work. It can by configured in the application.properties.
+There is a Swagger UI implemented on the URL http://localhost:8088/
 
 ## Consumer ##
 
 This will consume the data from provider. To simulate the block or non blocking calls.
+You can call the Swagger UI on http://localhost:8090/
