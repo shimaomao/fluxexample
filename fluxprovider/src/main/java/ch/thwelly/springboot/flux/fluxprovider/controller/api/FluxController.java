@@ -18,8 +18,8 @@ import reactor.core.publisher.Mono;
 import static ch.thwelly.springboot.flux.fluxprovider.controller.api.FluxController.API_URL;
 
 @Api(value = API_URL, description = "Data Providers with flux")
-@RestController
 @RequestMapping(API_URL)
+@RestController
 public class FluxController {
 
     final static String API_URL = "/api/flux";
@@ -30,7 +30,7 @@ public class FluxController {
     @ApiOperation(value = "Get PersonEntity by ID. (Non Blocking Implementation.)")
     @ApiResponses({@ApiResponse(code = 200, message = "Ok"), @ApiResponse(code = 500, message = "Internal Server Error")})
     @GetMapping("/{id}")
-    public Mono<PersonEntity> searchById(@PathVariable final long id) throws InterruptedException {
+    public Mono<PersonEntity> searchById(@PathVariable long id) throws InterruptedException {
         return providerService.searchByIdFlux(id);
     }
 

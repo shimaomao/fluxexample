@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,7 +33,21 @@ public class FluxController {
     @Bean
     public WebClient webClient() {
         checkConditions();
-        return WebClient.create(consumerAppProperties.getProviderUrl());
+        return WebClient.create(consumerAppProperties.getServerUrl());
+    }
+
+    @ApiOperation(value = "Get PersonEntity by ID. (Non Blocking Implementation.)")
+    @ApiResponses({@ApiResponse(code = 200, message = "Ok"), @ApiResponse(code = 500, message = "Internal Server Error")})
+    @GetMapping("/{id}")
+    public Mono<PersonData> searchById(@PathVariable long id) {
+        checkConditions();
+
+        return this.webClient()
+                .get()
+                .uri("/api/flux/" + Long.toString(id))
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(PersonData.class);
     }
 
     @ApiOperation(value = "Get a list of Flux<PersonEntity>. (Non Blocking Implementation.)")
@@ -43,26 +58,14 @@ public class FluxController {
 
         return this.webClient()
                 .get()
-                .uri("/api/flux/")
-                .exchange()
-                .flatMapMany(response -> response.bodyToFlux(PersonData.class));
-    }
-
-    @ApiOperation(value = "Get PersonEntity by ID. (Non Blocking Implementation.)")
-    @ApiResponses({@ApiResponse(code = 200, message = "Ok"), @ApiResponse(code = 500, message = "Internal Server Error")})
-    @GetMapping("/{id}")
-    public Mono<PersonData> searchById(@PathVariable final long id) {
-        checkConditions();
-
-        return this.webClient()
-                .get()
-                .uri("/api/flux/" + Long.toString(id))
-                .exchange()
-                .flatMap(response -> response.bodyToMono(PersonData.class));
+                .uri("/api/flux/all")
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToFlux(PersonData.class);
     }
 
     private void checkConditions() {
-        if (consumerAppProperties == null || consumerAppProperties.getProviderUrl() == null) {
+        if (consumerAppProperties == null || consumerAppProperties.getProviderServer() == null) {
             throw new RuntimeException("consumer-client config not set in application properties.");
         }
     }
