@@ -50,6 +50,38 @@ public class FluxController {
                 .bodyToMono(PersonData.class);
     }
 
+    /**
+     * This call will merge 3 person together to demo a multi call in a micro service.
+     *
+     * @return merged persons
+     */
+    @ApiOperation(value = "This call simulate blocking call when more services called. (Micro-Services)")
+    @ApiResponses({@ApiResponse(code = 200, message = "Ok"), @ApiResponse(code = 500, message = "Internal Server Error")})
+    @GetMapping("/multi")
+    public Flux<PersonData> getSomeUser() {
+        checkConditions();
+
+        Mono<PersonData> test1 = this.webClient()
+                .get()
+                .uri("/api/flux/" + Long.toString(1))
+                .retrieve()
+                .bodyToMono(PersonData.class);
+
+        Mono<PersonData> test2 = this.webClient()
+                .get()
+                .uri("/api/flux/" + Long.toString(3))
+                .retrieve()
+                .bodyToMono(PersonData.class);
+
+        Mono<PersonData> test3 = this.webClient()
+                .get()
+                .uri("/api/flux/" + Long.toString(4))
+                .exchange()
+                .flatMap(response -> response.bodyToMono(PersonData.class));
+
+        return Flux.merge(test1).mergeWith(test2).mergeWith(test3);
+    }
+
     @ApiOperation(value = "Get a list of Flux<PersonEntity>. (Non Blocking Implementation.)")
     @ApiResponses({@ApiResponse(code = 200, message = "Ok"), @ApiResponse(code = 500, message = "Internal Server Error")})
     @GetMapping("/all")
